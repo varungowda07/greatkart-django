@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from store.models import Product
 from .models import Cart,CartItem
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 def get_session_id(request):
@@ -54,7 +56,7 @@ def cart(request,total=0,cart_items=None,quantity=0):
             cart_item.subtotal = cart_item.product.price * cart_item.quantity
             total+=(cart_item.product.price * cart_item.quantity)
             quantity+=cart_item.quantity
-    except ObjectNotExist:
+    except ObjectDoesNotExist:
         pass
     intrest=(total*10)/100
     final_total=total+intrest
