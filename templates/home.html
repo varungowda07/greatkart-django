@@ -37,6 +37,8 @@
 			<figcaption class="info-wrap">
 				<a href="{% url 'product_detail' product.category.slug product.slug %}" class="title">{{ product.product_name }}</a>
 				<div class="price mt-1">${{ product.price }}</div> <!-- price-wrap.// -->
+			      <a href="{% url 'product_detail' product.category.slug product.slug %}" class="btn  btn-outline-primary"> <span class="text">View Details</span> <i class="fas fa-eye"></i>  </a>
+
 			</figcaption>
 		</div>
 	</div> <!-- col.// -->
@@ -48,12 +50,6 @@
 </div><!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
-
-
-
-
-
-<!-- ========================= FOOTER END // ========================= -->
 
 </body>
 </html>

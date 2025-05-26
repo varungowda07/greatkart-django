@@ -127,6 +127,7 @@
 			
 		</div>
 </header><!-- sect-heading -->
+{% if products %}
 
 <div class="row">
     {% for product in products %}
@@ -145,7 +146,16 @@
 						<del class="price-old">$1980</del>
 					</div> <!-- price-wrap.// -->
 				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>
+				{% if cart_item %}
+				<a href="/" class="btn  btn-primary"> <span class="text">Added To Cart</span> <i class="fas fa-check"></i>
+				<a href="/" class="btn  btn-primary"> <span class="text">View</span> <i class="fas fa-eye"></i>
+				{% else %}
+				   {% if product.stock >= 1 %}
+			      <a href="{% url 'product_detail' product.category.slug product.slug %}" class="btn  btn-outline-primary"> <span class="text">View</span> <i class="fas fa-eye"></i>  </a>
+				  {% else %}
+				  <a href="{% url 'add_cart' product.id %}" class="btn  btn-primary disabled"> <span class="text">Currently Unavailable</span> <i class="fas fa-shopping-cart"></i>  </a>
+				  {% endif %}
+             {% endif %}
 			</figcaption>
 		</figure>
 	</div> <!-- col.// -->
@@ -153,17 +163,39 @@
 
 	
 </div> <!-- row end.// -->
+{% else %}
+<h1 class="text-center">No result found. Try again.</h1>
+{% endif %}
 
-
+{% if products %}
 <nav class="mt-4" aria-label="Page navigation sample">
+	<div class="pagination">
+  <span class="step-links">
+      {% if products.has_previous %}
+          <a href="?page=1" class="btn btn-primary">&laquo; first </a>
+          <a href="?page={{ products.previous_page_number }}" class="btn btn-primary">previous</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ products.number }} of {{ products.paginator.num_pages }}.
+      </span>
+
+      {% if products.has_next %}
+          <a href="?page={{ products.next_page_number }}" class="btn btn-primary">next</a>
+          <a href="?page={{ products.paginator.num_pages }}" class="btn btn-primary">last &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+<!-- 	
   <ul class="pagination">
     <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
     <li class="page-item active"><a class="page-link" href="#">1</a></li>
     <li class="page-item"><a class="page-link" href="#">2</a></li>
     <li class="page-item"><a class="page-link" href="#">3</a></li>
     <li class="page-item"><a class="page-link" href="#">Next</a></li>
-  </ul>
+  </ul> -->
 </nav>
+{% endif %}
 
 	</main> <!-- col.// -->
 
