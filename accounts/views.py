@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect
+
+from carts.models import Cart, CartItem
+from carts.views import get_session_id
 from .forms import CustomLoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout,login as auth_login
@@ -21,9 +24,21 @@ def user_login(request):
         form = CustomLoginForm(request,data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            print("DEBUG USER:", user)
-            auth_login(request, user)  # ✅ use the aliased function
-            return redirect('dashboard')    # make sure 'home' is a valid URL name
+            if user is not None:
+                try:
+                    print("inside the try block")
+                    cart=Cart.objects.get(cart_id=get_session_id(request))
+                    is_cart_item_exists=CartItem.objects.filter(cart=cart).exists()
+                    if is_cart_item_exists:
+                        cart_item=CartItem.objects.filter(cart=cart)
+                        for item in cart_item:
+                            item.user=user
+                            item.save()
+                except:
+                    pass
+            auth_login(request, user) 
+            next_url = request.GET.get('next') or request.POST.get('next') or 'dashboard'  # fallback
+            return redirect(next_url)
         else:
             messages.error(request, 'Invalid username or password')
     else:
